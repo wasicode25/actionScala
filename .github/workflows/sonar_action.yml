@@ -16,10 +16,10 @@ jobs:
       with:
         # Disabling shallow clone is recommended for improving relevancy of reporting
         fetch-depth: 0
-    #- name: Run tests Scala
-      #run: |
-        #sbt clean coverage test
-        #sbt coverageAggregate
+    - name: Run tests Scala
+      run: |
+        sbt clean coverage test
+        sbt coverageAggregate
 
     - name: Archive artifacts
       uses: actions/upload-artifact@v4
@@ -27,7 +27,7 @@ jobs:
         name: unit_test_coverage
         #path: ./servipagos/coverage.xml
         path: |
-          scoverage.xml
+          target/scala-2.12/scoverage-report/scoverage.xml
         
 
   recuperar_atifact:
@@ -44,6 +44,10 @@ jobs:
     - name: cambiando directorio
       working-directory: ./
       run: ls
+    - name: SonarCloud scan fixed
+      uses: pervasive-cats/sonarcloud-scoverage-fix@v1.0.0
+      with:
+          scoverageReport: scoverage.xml
     - name: SonarQube Scan
       uses: sonarsource/sonarqube-scan-action@v2.0.1
       env:
