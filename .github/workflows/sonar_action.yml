@@ -44,16 +44,9 @@ jobs:
     - name: cambiando directorio
       working-directory: ./
       run: ls
-    - name: SonarCloud scan fixed
-      uses: pervasive-cats/sonarcloud-scoverage-fix@v1.0.0
-      with:
-          scoverageReport: scoverage.xml
-          args: >
-            -Dsonar.projectKey=learnGithubActions
-            -Dsonar.verbose=true
-      env:
-        GITHUB_TOKEN: ${{ secrets.MI_GITHUB_TOKEN }}
-        SONAR_TOKEN: ${{ secrets.SONARQUBE_TOKEN }}
+    - name: Replace all working directory paths with sources path
+      run: if [[ -n "scoverage.xml" ]]; then sed -i -e s,`pwd`,/github/workspace,g scoverage.xml; fi
+      shell: bash
     - name: SonarQube Scan
       uses: sonarsource/sonarqube-scan-action@v2.0.1
       env:
