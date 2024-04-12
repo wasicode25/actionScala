@@ -49,7 +49,7 @@ jobs:
       with:
           scoverageReport: scoverage.xml
       env:
-        #GIT_HUB_TOKEN: 
+        GITHUB_TOKEN: ${{ secrets.MI_GITHUB_TOKEN }}
         SONAR_HOST_URL: ${{ secrets.SONARQUBE_HOST }}
         SONAR_TOKEN: ${{ secrets.SONARQUBE_TOKEN }}
     - name: SonarQube Scan
