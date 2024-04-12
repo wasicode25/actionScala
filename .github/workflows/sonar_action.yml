@@ -1,0 +1,55 @@
+on:
+  # Trigger analysis when pushing in master or pull requests, and when creating
+  # a pull request. 
+  push:
+    branches:
+      - main
+
+name: SonarQube Scan
+jobs:
+  sonarqube:
+    name: SonarQube Trigger
+    runs-on: ubuntu-latest
+    steps:
+    - name: Checking out
+      uses: actions/checkout@main
+      with:
+        # Disabling shallow clone is recommended for improving relevancy of reporting
+        fetch-depth: 0
+    - name: Run tests Scala
+      run: |
+        sbt clean coverage test
+        sbt coverageAggregate
+
+    - name: Archive artifacts
+      uses: actions/upload-artifact@v4
+      with:
+        name: unit_test_coverage
+        #path: ./servipagos/coverage.xml
+        path: |
+          target/scala-2.12/scoverage-report/scoverage.xml
+        
+
+  recuperar_atifact:
+    needs: sonarqube
+
+    runs-on: ubuntu-latest
+    steps:
+    - name: Checking out
+      uses: actions/checkout@main
+    - name: descargando artifact
+      uses: actions/download-artifact@v4
+      with:
+        name: unit_test_coverage
+    - name: cambiando directorio
+      working-directory: ./
+      run: ls
+    - name: SonarQube Scan
+      uses: sonarsource/sonarqube-scan-action@v2.0.1
+      env:
+        SONAR_HOST_URL: ${{ secrets.SONARQUBE_HOST }}
+        SONAR_TOKEN: ${{ secrets.SONARQUBE_TOKEN }}
+
+
+
+
