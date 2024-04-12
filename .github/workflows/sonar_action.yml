@@ -16,10 +16,16 @@ jobs:
       with:
         # Disabling shallow clone is recommended for improving relevancy of reporting
         fetch-depth: 0
-    - name: Run tests Scala
-      run: |
-        sbt clean coverage test
-        sbt coverageAggregate
+    #- name: Run tests Scala
+      #run: |
+        #sbt clean coverage test
+        #sbt coverageAggregate
+    - name: Setup scala environment
+      uses: olafurpg/setup-scala@v13
+      with:
+        java-version: openjdk@1.17
+    - name: Generate coverage report
+      run: sbt clean coverage test coverageReport
 
     - name: Archive artifacts
       uses: actions/upload-artifact@v4
