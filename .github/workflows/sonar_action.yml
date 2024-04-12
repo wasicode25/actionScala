@@ -47,12 +47,13 @@ jobs:
     - name: Replace all working directory paths with sources path
       run: if [[ -n "scoverage.xml" ]]; then sed -i -e s,`pwd`,/github/workspace,g scoverage.xml; fi
       shell: bash
+    - name: cambiando directorio
+      run: cat scoverage.xml
     - name: SonarQube Scan
       uses: sonarsource/sonarqube-scan-action@v2.0.1
       env:
         SONAR_HOST_URL: ${{ secrets.SONARQUBE_HOST }}
         SONAR_TOKEN: ${{ secrets.SONARQUBE_TOKEN }}
-
 
 
 
